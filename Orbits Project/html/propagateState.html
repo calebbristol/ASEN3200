@@ -1,0 +1,243 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>propagateState</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-12-02"><meta name="DC.source" content="propagateState.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="keyword">function</span> x = propagateState(oe0,t,t_0,mu,J2,Re)
+<span class="comment">%DESCRIPTION: Computes the propagated position and velocity in km, km/s</span>
+<span class="comment">%accounting for approximate J2 perturbations</span>
+<span class="comment">%</span>
+<span class="comment">%INPUTS:</span>
+<span class="comment">% oe0       Orbit elements [a,e,i,Om,om,f] at time t0 (km,s,rad)</span>
+<span class="comment">% t         Current time (s)</span>
+<span class="comment">% t0        Time at the initial epoch (s)</span>
+<span class="comment">% MU        Central body's gravitational constant (km^3/s^2)</span>
+<span class="comment">% J2        Central body's J2 parameter (dimensionless)</span>
+<span class="comment">% Re        Radius of central body (km)</span>
+<span class="comment">%</span>
+<span class="comment">%OUTPUTS:</span>
+<span class="comment">% x         Position and velocity vectors of the form [r; rdot] (6x1) at</span>
+<span class="comment">%             time t</span>
+
+
+<span class="comment">%make sure that function has outputs</span>
+x = NaN(6,1);
+
+<span class="comment">%1) Compute the mean orbit elements oe(t) at time t due to J2 perturbations</span>
+    a = oe0(1);
+    e = oe0(2);
+    i = oe0(3);
+    Om = oe0(4);
+    om = oe0(5);
+    f = oe0(6);
+    Om_dot = -((3/2)*((sqrt(mu)*J2*Re^2)/(2*(1-e^2)^2*a^(7/2)))) * cos(i);
+    om_dot = Om_dot * ((5/2)*sin(i)^2 - 2) / cos(i);
+
+    <span class="comment">% Effects of peterbations</span>
+    Om = Om + Om_dot * (t - t_0);
+    om = om + om_dot * (t - t_0);
+
+    <span class="comment">% Normalize to domain</span>
+    Om = Om - 2*pi*(floor(Om/(2*pi)));
+    om = om - 2*pi*(floor(om/(2*pi)));
+
+<span class="comment">%2) Solve the time-of-flight problem to compute the true anomaly at tiem t</span>
+    h = sqrt(mu*a*(1-e^2));
+    n = sqrt(mu/a^3);
+    P = 2*pi/n;
+    M = @(t) 2*pi/P*t;
+    M_ = M(t-t_0);
+    tol = 1e-9;
+
+    [E_f,f_f] = keptof(2*pi*i/length(t),e,M_,tol);
+
+<span class="comment">%3) Compute r(t), rdot(t) in the perifocal frame</span>
+    r = a*(1-e^2) / (1 + e*cos(f));
+
+    <span class="comment">%Position</span>
+    r_f = [r*cos(f_f) r*sin(f_f) 0]';
+
+    <span class="comment">% Velocity</span>
+    r_dot_f = (mu/h)*[-sin(f_f) e+cos(f_f) 0]';
+
+<span class="comment">%4) Compute r(t), rdot(t) in the ECI frame, save into x</span>
+    PN = angle2dcm(Om,i,om,<span class="string">'ZXZ'</span>);
+
+    r_ECI = PN' * r_f;
+    r_dot_ECI = PN * r_dot_f;
+
+    x = [r_ECI;r_dot_ECI];
+
+<span class="keyword">function</span> [E,f] = keptof(E_0,e,M,tol)
+f_calc = @(E) 2*atan(sqrt((1+e)/(1-e)) * tan(E/2));
+ratio = 1;
+E_ = E_0;
+<span class="comment">%f_ = f_calc(E_0);</span>
+
+<span class="comment">%i = 2;</span>
+    <span class="keyword">while</span> ratio &gt; tol
+        ratio = (E_ - e*sin(E_) - M)/(1 - e*cos(E_));
+        E_ = E_ - ratio;
+        <span class="comment">%f_(i) = f_calc(E_(i));</span>
+        <span class="comment">%i = i+1;</span>
+    <span class="keyword">end</span>
+<span class="comment">%iteration = 1:i-1;</span>
+E = E_;
+f = f_calc(E_);
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><pre class="codeoutput error">Not enough input arguments.
+
+Error in propagateState (line 22)
+    a = oe0(1);
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function x = propagateState(oe0,t,t_0,mu,J2,Re)
+%DESCRIPTION: Computes the propagated position and velocity in km, km/s
+%accounting for approximate J2 perturbations
+%
+%INPUTS:
+% oe0       Orbit elements [a,e,i,Om,om,f] at time t0 (km,s,rad)
+% t         Current time (s)
+% t0        Time at the initial epoch (s)
+% MU        Central body's gravitational constant (km^3/s^2)
+% J2        Central body's J2 parameter (dimensionless)
+% Re        Radius of central body (km)
+%
+%OUTPUTS:
+% x         Position and velocity vectors of the form [r; rdot] (6x1) at
+%             time t
+
+
+%make sure that function has outputs
+x = NaN(6,1);
+
+%1) Compute the mean orbit elements oe(t) at time t due to J2 perturbations
+    a = oe0(1);
+    e = oe0(2);
+    i = oe0(3);
+    Om = oe0(4);
+    om = oe0(5);
+    f = oe0(6);
+    Om_dot = -((3/2)*((sqrt(mu)*J2*Re^2)/(2*(1-e^2)^2*a^(7/2)))) * cos(i);
+    om_dot = Om_dot * ((5/2)*sin(i)^2 - 2) / cos(i);
+
+    % Effects of peterbations
+    Om = Om + Om_dot * (t - t_0);
+    om = om + om_dot * (t - t_0);
+
+    % Normalize to domain
+    Om = Om - 2*pi*(floor(Om/(2*pi)));
+    om = om - 2*pi*(floor(om/(2*pi)));
+
+%2) Solve the time-of-flight problem to compute the true anomaly at tiem t
+    h = sqrt(mu*a*(1-e^2));
+    n = sqrt(mu/a^3);
+    P = 2*pi/n;
+    M = @(t) 2*pi/P*t;
+    M_ = M(t-t_0);
+    tol = 1e-9;
+    
+    [E_f,f_f] = keptof(2*pi*i/length(t),e,M_,tol);
+
+%3) Compute r(t), rdot(t) in the perifocal frame
+    r = a*(1-e^2) / (1 + e*cos(f));
+
+    %Position
+    r_f = [r*cos(f_f) r*sin(f_f) 0]';
+
+    % Velocity
+    r_dot_f = (mu/h)*[-sin(f_f) e+cos(f_f) 0]';
+
+%4) Compute r(t), rdot(t) in the ECI frame, save into x
+    PN = angle2dcm(Om,i,om,'ZXZ');
+    
+    r_ECI = PN' * r_f;
+    r_dot_ECI = PN * r_dot_f;
+    
+    x = [r_ECI;r_dot_ECI];
+
+function [E,f] = keptof(E_0,e,M,tol)
+f_calc = @(E) 2*atan(sqrt((1+e)/(1-e)) * tan(E/2));
+ratio = 1;
+E_ = E_0;
+%f_ = f_calc(E_0);
+
+%i = 2;
+    while ratio > tol
+        ratio = (E_ - e*sin(E_) - M)/(1 - e*cos(E_));
+        E_ = E_ - ratio;
+        %f_(i) = f_calc(E_(i));
+        %i = i+1;
+    end
+%iteration = 1:i-1;
+E = E_;
+f = f_calc(E_);
+end
+end
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,82 @@
+{
+    "companyName": "name of your company",
+    "companyExecutives": ["team member 1", "team member 2", "team member 3"],
+    "launches": [
+        {
+            "launch name": "1",
+            "orbit":{
+                "a": 10000,
+                "e": 0.1,
+                "i": 0,
+                "Om": 0.5236,
+                "om": 4.7124
+            },
+            "payload": [
+                    {
+                        "name": "this spacecraft name",
+                        "f": 3.1415
+                    },
+                    {
+                        "name": "that spacecraft name",
+                        "f": 1.0472
+                    }
+                ]
+        },
+{
+            "launch name": "2",
+            "orbit":{
+                "a": 10000,
+                "e": 0.1,
+                "i": 0.785,
+                "Om": 0.5236,
+                "om": 4.7124
+            },
+            "payload": [
+                    {
+                        "name": "this spacecraft name",
+                        "f": 3.1415
+                    },
+                    {
+                        "name": "that spacecraft name",
+                        "f": 1.0472
+                    }
+                ]
+        },
+        {
+            "launch name": "2",
+            "orbit":{
+                "a": 10000,
+                "e": 0.1,
+                "i": 1.571,
+                "Om": 0.7,
+                "om": 4.7124
+            },
+            "payload": [
+                    {
+                        "name": "this spacecraft name",
+                        "f": 3.1415
+                    },
+                    {
+                        "name": "that spacecraft name",
+                        "f": 1.0472
+                    }
+                ]
+        },
+        {
+            "launch name": "3",
+            "orbit":{
+                "a": 10000,
+                "e": 0.1,
+                "i": 2.356,
+                "Om": 0.7,
+                "om": 4.7124
+            },
+            "payload":  [
+                {
+                    "name": "another spacecraft name",
+                    "f": 3.9270
+                }
+            ]
+        }
+    ]
+}

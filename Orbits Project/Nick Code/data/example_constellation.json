@@ -1,0 +1,42 @@
+{
+    "companyName": "name of your company",
+    "companyExecutives": ["team member 1", "team member 2", "team member 3"],
+    "launches": [
+        {
+            "launch name": "1",
+            "orbit":{
+                "a": 10000,
+                "e": 0.1,
+                "i": 1.2741,
+                "Om": 0.5236,
+                "om": 4.7124
+            },
+            "payload": [
+                    {
+                        "name": "this spacecraft name",
+                        "f": 3.1415
+                    },
+                    {
+                        "name": "that spacecraft name",
+                        "f": 1.0472
+                    }
+                ]
+        },
+        {
+            "launch name": "2",
+            "orbit":{
+                    "a": 9250,
+                    "e": 0.15,
+                    "i": 0.5236,
+                    "Om": 1.5708,
+                    "om": 1.5708
+            },
+            "payload":  [
+                {
+                    "name": "another spacecraft name",
+                    "f": 3.9270
+                }
+            ]
+        }
+    ]
+}

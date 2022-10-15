@@ -1,0 +1,102 @@
+{
+    "companyName": "name of your company",
+    "companyExecutives": ["team member 1", "team member 2", "team member 3"],
+    "launches": [
+        {
+            "launch name": "0",
+            "orbit":{
+                "a": 7103,
+                "e": 0.00001,
+                "i": 1.5708,
+                "Om": 0,
+                "om": 0
+            },
+            "payload": [
+                    {
+                        "name": "this spacecraft name",
+                        "f": 0
+                    }
+                ]
+        },
+        {
+            "launch name": "1",
+            "orbit":{
+                "a": 7103,
+                "e": 0.00001,
+                "i": 1.5708,
+                "Om": 0.1745,
+                "om": 0
+            },
+            "payload": [
+                    {
+                        "name": "this spacecraft name",
+                        "f": 0
+                    }
+                ]
+        },
+        {
+            "launch name": "2",
+            "orbit":{
+                "a": 7103,
+                "e": 0.00001,
+                "i": 1.5708,
+                "Om": 0.349,
+                "om": 0
+            },
+            "payload": [
+                    {
+                        "name": "this spacecraft name",
+                        "f": 0
+                    }
+                ]
+        },
+        {
+            "launch name": "3",
+            "orbit":{
+                "a": 7103,
+                "e": 0.00001,
+                "i": 1.5708,
+                "Om": 0.5235,
+                "om": 0
+            },
+            "payload": [
+                    {
+                        "name": "this spacecraft name",
+                        "f": 0
+                    }
+                ]
+        },
+        {
+            "launch name": "4",
+            "orbit":{
+                "a": 7103,
+                "e": 0.00001,
+                "i": 1.5708,
+                "Om": 0.698,
+                "om": 0
+            },
+            "payload": [
+                    {
+                        "name": "this spacecraft name",
+                        "f": 0
+                    }
+                ]
+        },
+        {
+            "launch name": "5",
+            "orbit":{
+                "a": 7103,
+                "e": 0.00001,
+                "i": 1.5708,
+                "Om": 0.8725,
+                "om": 0
+            },
+            "payload": [
+                    {
+                        "name": "this spacecraft name",
+                        "f": 0
+                    }
+                ]
+        }
+    ]
+}
